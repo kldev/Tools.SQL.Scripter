@@ -54,7 +54,7 @@ namespace Tools.SQL.Scripter {
             scrp.Options.ToFileOnly = false;
             scrp.Options.IncludeDatabaseContext = true;
             scrp.Options.AllowSystemObjects = false;
-            scrp.Options.SchemaQualify = true;
+            scrp.Options.SchemaQualify = true;            
 
             foreach (Smo.Database db in srv.Databases) {
 
@@ -186,10 +186,13 @@ namespace Tools.SQL.Scripter {
                 foreach (var urn in urns) {
 
                     Logger.LogInformation ($"Write script for: {urn.Name}.sql");
-                    scripter.Options.FileName = Path.Combine (storeObjectPath, urn.Name + ".sql");
-                    scripter.Options.AppendToFile = true;
+                    var filePath =  Path.Combine (storeObjectPath, urn.Name + ".sql");
 
+                    scripter.Options.FileName = filePath;
+                    scripter.Options.AppendToFile = true;
                     scripter.Script (new[] { urn.Urn });
+                    
+                    Dos2Unix.Convert (filePath);
                 }
 
             }
